@@ -15,7 +15,7 @@ const workerConfig: WorkerConfig = {
       name: 'NueVps · 1panel(隧道)',
       method: 'GET',
       target: 'https://panel.akaneri.de/',
-      expectedCodes: [302],
+      expectedCodes: [200, 302],
       timeout: 10000,
     },
     {
@@ -38,7 +38,7 @@ const workerConfig: WorkerConfig = {
       name: 'LaxVps · Jellyfin(隧道)',
       method: 'GET',
       target: 'https://jellyfin.703040.xyz/',
-      expectedCodes: [302],
+      expectedCodes: [200, 302],
       timeout: 10000,
     },
     {
