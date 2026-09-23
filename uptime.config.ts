@@ -24,7 +24,7 @@ const workerConfig: WorkerConfig = {
       method: 'GET',
       target: 'https://immich.akaneri.de/api/server/ping',
       expectedCodes: [200],
-      timeout: 15000,
+      timeout: 25000,
     },
     {
       id: 'nue_ssh',
@@ -76,7 +76,7 @@ const workerConfig: WorkerConfig = {
       timeout: 10000,
     },
     timeZone: 'Asia/Shanghai',
-    gracePeriod: 3,
+    gracePeriod: 2,
   },
 }
 
