@@ -64,10 +64,17 @@ const workerConfig: WorkerConfig = {
       expectedCodes: [404],
       timeout: 10000,
     },
+    {
+      id: 'fra_ssh',
+      name: 'FraVps · SSH(22)',
+      method: 'TCP_PING',
+      target: '62.84.174.229:22',
+      timeout: 8000,
+    },
   ],
   notification: {
     webhook: {
-      url: 'https://api.telegram.org/bot8261944731:AAFdLF3PGjhPwTJ4MJqxR6GaZfyeQeyOMRg/sendMessage',
+      url: 'https://api.telegram.org/bot8261944731:AAHWWbDNr3hOcwJc0rzubxhYURMyHowWXCw/sendMessage',
       payloadType: 'x-www-form-urlencoded',
       payload: {
         chat_id: '6237284663',
