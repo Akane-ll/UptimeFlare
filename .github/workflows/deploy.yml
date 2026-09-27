@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Inject TG bot token from secret
+        run: sed -i "s/__TG_BOT_TOKEN__/${{ secrets.TG_BOT_TOKEN }}/g" uptime.config.ts
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
         with:
