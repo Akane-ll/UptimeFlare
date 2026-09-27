@@ -57,10 +57,10 @@ const workerConfig: WorkerConfig = {
       timeout: 10000,
     },
     {
-      id: 'lonvps_ws',
-      name: 'LonVps · ws代理',
+      id: 'fra_ws',
+      name: 'FraVps · ws代理',
       method: 'GET',
-      target: 'https://ws-lon.akaneri.de/2e691486-98a7-4044-9e84-20316a23853d-vless',
+      target: 'https://ws-fra.akaneri.de/b7212f01-5912-4b54-906b-f8fd27e522dc-vless',
       expectedCodes: [404],
       timeout: 10000,
     },
