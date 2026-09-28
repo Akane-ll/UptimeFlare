@@ -34,14 +34,6 @@ const workerConfig: WorkerConfig = {
       timeout: 8000,
     },
     {
-      id: 'lax_jellyfin',
-      name: 'LaxVps · Jellyfin(隧道)',
-      method: 'GET',
-      target: 'https://jellyfin.703040.xyz/',
-      expectedCodes: [200, 302],
-      timeout: 10000,
-    },
-    {
       id: 'lax_ssh',
       name: 'LaxVps · SSH(22)',
       method: 'TCP_PING',
