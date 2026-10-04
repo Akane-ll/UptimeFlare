@@ -56,6 +56,29 @@ const workerConfig: WorkerConfig = {
       expectedCodes: [404],
       timeout: 10000,
     },
+    {
+      id: 'bero_ssh',
+      name: 'BeroVps · SSH(22)',
+      method: 'TCP_PING',
+      target: '45.82.122.11:22',
+      timeout: 8000,
+    },
+    {
+      id: 'bero_komodo',
+      name: 'BeroVps · Komodo(隧道)',
+      method: 'GET',
+      target: 'https://komodo.akaneri.de/',
+      expectedCodes: [302],
+      timeout: 10000,
+    },
+    {
+      id: 'bero_arcane',
+      name: 'BeroVps · Arcane(隧道)',
+      method: 'GET',
+      target: 'https://arcane.akaneri.de/',
+      expectedCodes: [302],
+      timeout: 10000,
+    },
   ],
   notification: {
     webhook: {
