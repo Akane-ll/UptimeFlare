@@ -68,7 +68,7 @@ const workerConfig: WorkerConfig = {
       name: 'BeroVps · Komodo(隧道)',
       method: 'GET',
       target: 'https://komodo.akaneri.de/',
-      expectedCodes: [302],
+      expectedCodes: [200, 302],
       timeout: 10000,
     },
     {
@@ -76,7 +76,7 @@ const workerConfig: WorkerConfig = {
       name: 'BeroVps · Arcane(隧道)',
       method: 'GET',
       target: 'https://arcane.akaneri.de/',
-      expectedCodes: [302],
+      expectedCodes: [200, 302],
       timeout: 10000,
     },
   ],
