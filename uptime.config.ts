@@ -64,14 +64,6 @@ const workerConfig: WorkerConfig = {
       timeout: 8000,
     },
     {
-      id: 'bero_komodo',
-      name: 'BeroVps · Komodo(隧道)',
-      method: 'GET',
-      target: 'https://komodo.akaneri.de/',
-      expectedCodes: [200, 302],
-      timeout: 10000,
-    },
-    {
       id: 'bero_arcane',
       name: 'BeroVps · Arcane(隧道)',
       method: 'GET',
