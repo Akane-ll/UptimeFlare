@@ -101,7 +101,7 @@ const workerConfig: WorkerConfig = {
       name: 'BeroVps · 白虎签到(隧道+Access)',
       method: 'GET',
       target: 'https://baihu.akaneri.de/',
-      expectedCodes: [302],
+      expectedCodes: [200, 302],
       timeout: 10000,
     },
   ],
