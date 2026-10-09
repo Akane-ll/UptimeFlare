@@ -11,12 +11,12 @@ const pageConfig: PageConfig = {
 const workerConfig: WorkerConfig = {
   monitors: [
     {
-      id: 'nue_panel',
-      name: 'NueVps · 1panel(隧道)',
+      id: 'nue_caddy',
+      name: 'NueVps · Caddy(443直连)',
       method: 'GET',
-      target: 'https://panel.akaneri.de/',
-      expectedCodes: [200, 302],
-      timeout: 10000,
+      target: 'https://immich.akaneri.de/',
+      expectedCodes: [200],
+      timeout: 25000,
     },
     {
       id: 'nue_immich',
