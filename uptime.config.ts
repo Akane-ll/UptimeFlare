@@ -11,6 +11,14 @@ const pageConfig: PageConfig = {
 const workerConfig: WorkerConfig = {
   monitors: [
     {
+      id: 'bero_cookiecloud',
+      name: 'BeroVps · CookieCloud(隧道)',
+      method: 'GET',
+      target: 'https://cookie.akaneri.de/',
+      expectedCodes: [200],
+      timeout: 25000,
+    },
+    {
       id: 'nue_caddy',
       name: 'NueVps · Caddy(443直连)',
       method: 'GET',
