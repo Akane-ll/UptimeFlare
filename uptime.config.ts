@@ -11,11 +11,11 @@ const pageConfig: PageConfig = {
 const workerConfig: WorkerConfig = {
   monitors: [
     {
-      id: 'bero_freshrss',
-      name: 'BeroVps · FreshRSS(隧道)',
+      id: 'bero_miniflux',
+      name: 'BeroVps · Miniflux(隧道)',
       method: 'GET',
       target: 'https://rss.akaneri.de/',
-      expectedCodes: [200, 302],
+      expectedCodes: [200],
     },
     {
       id: 'bero_cookiecloud',
