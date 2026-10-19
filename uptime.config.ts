@@ -119,6 +119,14 @@ const workerConfig: WorkerConfig = {
       expectedCodes: [200, 302],
       timeout: 10000,
     },
+    {
+      id: 'tech_homepage',
+      name: 'BeroVps · Homepage 仪表盘(隧道+OIDC)',
+      method: 'GET',
+      target: 'https://home.akaneri.tech/',
+      expectedCodes: [200, 302, 307],
+      timeout: 10000,
+    },
   ],
   notification: {
     webhook: {
