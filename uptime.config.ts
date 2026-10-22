@@ -127,6 +127,14 @@ const workerConfig: WorkerConfig = {
       expectedCodes: [200, 302, 307],
       timeout: 10000,
     },
+    {
+      id: 'tech_monitor',
+      name: 'NueVps · Monitor 探针状态页(隧道)',
+      method: 'GET',
+      target: 'https://monitor.akaneri.tech/',
+      expectedCodes: [200],
+      timeout: 10000,
+    },
   ],
   notification: {
     webhook: {
