@@ -1,5 +1,11 @@
 // Akane infrastructure uptime monitoring
 // Managed by ZCode, config format: https://github.com/lyc8503/UptimeFlare
+//
+// Scope doctrine (2026-10-24): UptimeFlare is the out-of-band last-resort monitor
+// (CF Workers, zero shared failure domains with the fleet). It only covers the
+// observation chain itself (Beszel/Arcane), identity & lockout surface
+// (Pocket ID/Vaultwarden), and bare machine liveness (SSH). Everything
+// service-level is Beszel ContainerHealth's territory.
 
 import { MaintenanceConfig, PageConfig, WorkerConfig } from './types/config'
 
@@ -11,88 +17,11 @@ const pageConfig: PageConfig = {
 const workerConfig: WorkerConfig = {
   monitors: [
     {
-      id: 'bero_miniflux',
-      name: 'BeroVps · Miniflux(隧道)',
-      method: 'GET',
-      target: 'https://rss.akaneri.de/',
-      expectedCodes: [200],
-    },
-    {
-      id: 'bero_cookiecloud',
-      name: 'BeroVps · CookieCloud(隧道)',
-      method: 'GET',
-      target: 'https://cookie.akaneri.de/',
-      expectedCodes: [200],
-      timeout: 25000,
-    },
-    {
-      id: 'nue_caddy',
-      name: 'NueVps · Caddy(443直连)',
-      method: 'GET',
-      target: 'https://immich.akaneri.de/',
-      expectedCodes: [200],
-      timeout: 25000,
-    },
-    {
-      id: 'nue_immich',
-      name: 'NueVps · Immich(443直连)',
-      method: 'GET',
-      target: 'https://immich.akaneri.de/api/server/ping',
-      expectedCodes: [200],
-      responseKeyword: 'pong',
-      timeout: 25000,
-    },
-    {
-      id: 'nue_ssh',
-      name: 'NueVps · SSH(22)',
-      method: 'TCP_PING',
-      target: '159.195.55.184:22',
-      timeout: 8000,
-    },
-    {
-      id: 'lax_ssh',
-      name: 'LaxVps · SSH(22)',
-      method: 'TCP_PING',
-      target: '23.80.91.107:22',
-      timeout: 8000,
-    },
-    {
-      id: 'laxvm_ws',
-      name: 'LaxVm · ws代理',
-      method: 'GET',
-      target: 'https://ws-lax.akanell.de/37d2044b-a5ee-46d8-9190-c2d2ccfc17b1-vless',
-      expectedCodes: [404],
-      timeout: 10000,
-    },
-    {
-      id: 'fra_ws',
-      name: 'FraVps · ws代理',
-      method: 'GET',
-      target: 'https://ws-fra.akanell.de/b7212f01-5912-4b54-906b-f8fd27e522dc-vless',
-      expectedCodes: [404],
-      timeout: 10000,
-    },
-    {
-      id: 'bero_ssh',
-      name: 'BeroVps · SSH(22)',
-      method: 'TCP_PING',
-      target: '45.82.122.11:22',
-      timeout: 8000,
-    },
-    {
       id: 'bero_arcane',
-      name: 'BeroVps · Arcane(隧道)',
+      name: 'BeroVps · Arcane(自愈中枢)',
       method: 'GET',
       target: 'https://arcane.akaneri.de/',
       expectedCodes: [200, 302],
-      timeout: 10000,
-    },
-    {
-      id: 'nue_pocketid',
-      name: 'NueVps · Pocket ID(全家SSO)',
-      method: 'GET',
-      target: 'https://id.akaneri.de/',
-      expectedCodes: [200],
       timeout: 10000,
     },
     {
@@ -104,36 +33,48 @@ const workerConfig: WorkerConfig = {
       timeout: 10000,
     },
     {
-      id: 'nue_openwebui',
-      name: 'NueVps · Open WebUI(隧道)',
+      id: 'nue_pocketid',
+      name: 'NueVps · Pocket ID(全家SSO)',
       method: 'GET',
-      target: 'https://chat.akaneri.de/',
-      expectedCodes: [200, 302],
-      timeout: 10000,
-    },
-    {
-      id: 'bero_baihu',
-      name: 'BeroVps · 白虎签到(隧道+Access)',
-      method: 'GET',
-      target: 'https://baihu.akaneri.de/',
-      expectedCodes: [200, 302],
-      timeout: 10000,
-    },
-    {
-      id: 'tech_homepage',
-      name: 'BeroVps · Homepage 仪表盘(隧道+OIDC)',
-      method: 'GET',
-      target: 'https://home.akaneri.tech/',
-      expectedCodes: [200, 302, 307],
-      timeout: 10000,
-    },
-    {
-      id: 'tech_monitor',
-      name: 'NueVps · Monitor 探针状态页(隧道)',
-      method: 'GET',
-      target: 'https://monitor.akaneri.tech/',
+      target: 'https://id.akaneri.de/',
       expectedCodes: [200],
       timeout: 10000,
+    },
+    {
+      id: 'nue_vaultwarden',
+      name: 'NueVps · Vaultwarden(密码库)',
+      method: 'GET',
+      target: 'https://vw.akaneri.de/',
+      expectedCodes: [200],
+      timeout: 10000,
+    },
+    {
+      id: 'nue_ssh',
+      name: 'NueVps · SSH(22)',
+      method: 'TCP_PING',
+      target: '159.195.55.184:22',
+      timeout: 8000,
+    },
+    {
+      id: 'bero_ssh',
+      name: 'BeroVps · SSH(22)',
+      method: 'TCP_PING',
+      target: '45.82.122.11:22',
+      timeout: 8000,
+    },
+    {
+      id: 'lax_ssh',
+      name: 'LaxVps · SSH(22)',
+      method: 'TCP_PING',
+      target: '23.80.91.107:22',
+      timeout: 8000,
+    },
+    {
+      id: 'clt_ssh',
+      name: 'CltVps · SSH(22)',
+      method: 'TCP_PING',
+      target: '23.246.165.93:22',
+      timeout: 8000,
     },
   ],
   notification: {
