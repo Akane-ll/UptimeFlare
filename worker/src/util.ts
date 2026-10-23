@@ -132,14 +132,30 @@ async function webhookNotify(webhook: WebhookConfig, message: string) {
         Object.fromEntries(headers.entries())
       )}, body ${JSON.stringify(body)}`
     )
-    const resp = await fetchTimeout(url, webhook.timeout ?? 5000, { method, headers, body })
-
-    if (!resp.ok) {
-      console.log(
-        'Error calling webhook server, code: ' + resp.status + ', response: ' + (await resp.text())
-      )
-    } else {
-      console.log('Webhook notification sent successfully, code: ' + resp.status)
+    const maxAttempts = 3
+    let lastError: string | undefined = 'not attempted'
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const resp = await fetchTimeout(url, webhook.timeout ?? 5000, { method, headers, body })
+        if (resp.ok) {
+          console.log('Webhook notification sent successfully, code: ' + resp.status)
+          lastError = undefined
+          break
+        }
+        lastError = 'HTTP ' + resp.status + ', response: ' + (await resp.text())
+        console.log(`Webhook attempt ${attempt}/${maxAttempts} failed: ` + lastError)
+      } catch (e) {
+        lastError = String(e)
+        console.log(`Webhook attempt ${attempt}/${maxAttempts} threw: ${e}`)
+      }
+      if (attempt < maxAttempts) {
+        const delayMs = attempt * 2000
+        console.log(`Retrying webhook notification in ${delayMs}ms`)
+        await new Promise((resolve) => setTimeout(resolve, delayMs))
+      }
+    }
+    if (lastError !== undefined) {
+      console.log('Webhook notification failed after ' + maxAttempts + ' attempts: ' + lastError)
     }
   } catch (e) {
     console.log('Error calling webhook server: ' + e)
