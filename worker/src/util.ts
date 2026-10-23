@@ -155,7 +155,7 @@ async function webhookNotify(webhook: WebhookConfig, message: string) {
       }
     }
     if (lastError !== undefined) {
-      console.log('Webhook notification failed after ' + maxAttempts + ' attempts: ' + lastError)
+      throw 'Webhook notification failed after ' + maxAttempts + ' attempts: ' + lastError
     }
   } catch (e) {
     console.log('Error calling webhook server: ' + e)

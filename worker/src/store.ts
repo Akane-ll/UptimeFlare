@@ -84,6 +84,7 @@ export class CompactedMonitorStateWrapper {
           start: incidents.start[i],
           end: incidents.end[i],
           error: incidents.error[i],
+          downNotified: incidents.notified?.[i] === true,
         })
       }
     })
@@ -134,6 +135,7 @@ export class CompactedMonitorStateWrapper {
       start: incidents.start[index],
       end: incidents.end[index],
       error: incidents.error[index],
+      downNotified: incidents.notified?.[index] === true,
     }
   }
 
@@ -145,6 +147,11 @@ export class CompactedMonitorStateWrapper {
     incidents.start[index] = incident.start
     incidents.end[index] = incident.end
     incidents.error[index] = incident.error
+    if (incident.downNotified) {
+      incidents.notified = incidents.notified ?? []
+      while (incidents.notified.length < index) incidents.notified.push(false)
+      incidents.notified[index] = true
+    }
   }
 
   appendIncident(monitorId: string, incident: IncidentRecord) {
@@ -161,6 +168,7 @@ export class CompactedMonitorStateWrapper {
     incidents.start.push(incident.start)
     incidents.end.push(incident.end)
     incidents.error.push(incident.error)
+    if (incidents.notified) incidents.notified.push(incident.downNotified === true)
   }
 
   shiftIncident(monitorId: string) {
@@ -168,6 +176,7 @@ export class CompactedMonitorStateWrapper {
     incidents.start.shift()
     incidents.end.shift()
     incidents.error.shift()
+    incidents.notified?.shift()
   }
 
   unshiftIncident(monitorId: string, incident: IncidentRecord) {
@@ -175,6 +184,7 @@ export class CompactedMonitorStateWrapper {
     incidents.start.unshift(incident.start)
     incidents.end.unshift(incident.end)
     incidents.error.unshift(incident.error)
+    if (incidents.notified) incidents.notified.unshift(incident.downNotified === true)
   }
 
   latencyLen(monitorId: string): number {

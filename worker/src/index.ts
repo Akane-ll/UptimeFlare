@@ -119,45 +119,43 @@ const Worker = {
         }
 
         const currentIncident = state.getIncident(monitor.id, state.incidentLen(monitor.id) - 1)
+        const downtimeNow = currentTimeSecond - currentIncident.start[0]
+        const gracePeriod = workerConfig.notification?.gracePeriod
+        const isOpenEvent = monitorStatusChanged && currentIncident.start.length === 1
+        const isErrorChange = monitorStatusChanged && currentIncident.start.length > 1
+        const pastGrace = downtimeNow >= (gracePeriod ?? 0) * 60 - 30
+        const downNotified = currentIncident.downNotified === true
+
         try {
-          if (
-            // monitor status changed AND...
-            (monitorStatusChanged &&
-              // grace period not set OR ...
-              (workerConfig.notification?.gracePeriod === undefined ||
-                // have sent a notification for DOWN status
-                currentTimeSecond - currentIncident.start[0] >=
-                  (workerConfig.notification.gracePeriod + 1) * 60 - 30)) ||
-            // grace period is set AND...
-            (workerConfig.notification?.gracePeriod !== undefined &&
-              // grace period is met
-              currentTimeSecond - currentIncident.start[0] >=
-                workerConfig.notification.gracePeriod * 60 - 30 &&
-              currentTimeSecond - currentIncident.start[0] <
-                workerConfig.notification.gracePeriod * 60 + 30)
-          ) {
-            if (
-              currentIncident.start[0] !== currentTimeSecond &&
-              workerConfig.notification?.skipErrorChangeNotification
-            ) {
-              console.log(
-                'Skipping notification for following error reason change due to user config'
-              )
-            } else {
-              await formatAndNotify(
-                monitor,
-                false,
-                currentIncident.start[0],
-                currentTimeSecond,
-                status.err
-              )
+          let shouldNotifyDown: boolean
+          if (gracePeriod === undefined) {
+            // No grace period: notify on incident open and on error reason change (upstream default)
+            shouldNotifyDown = monitorStatusChanged
+          } else if (isErrorChange) {
+            // Reason changed mid-incident: re-notify past grace unless the user opted out
+            shouldNotifyDown = pastGrace && !workerConfig.notification?.skipErrorChangeNotification
+          } else {
+            // Steady downtime: fire once per incident once grace has passed.
+            // Latch survives only a successful send, so a failed send retries on the next check
+            // and a jittered late check still fires instead of falling out of a fixed window.
+            shouldNotifyDown = pastGrace && !downNotified
+          }
+
+          if (shouldNotifyDown) {
+            await formatAndNotify(
+              monitor,
+              false,
+              currentIncident.start[0],
+              currentTimeSecond,
+              status.err
+            )
+            if (gracePeriod !== undefined) {
+              currentIncident.downNotified = true
+              state.setIncident(monitor.id, state.incidentLen(monitor.id) - 1, currentIncident)
             }
           } else {
             console.log(
-              `Grace period (${workerConfig.notification
-                ?.gracePeriod}m) not met or no change (currently down for ${
-                currentTimeSecond - currentIncident.start[0]
-              }s, changed ${monitorStatusChanged}), skipping webhook DOWN notification for ${
+              `Grace period (${gracePeriod}m) not met or already notified (currently down for ${downtimeNow}s), skipping webhook DOWN notification for ${
                 monitor.name
               }`
             )

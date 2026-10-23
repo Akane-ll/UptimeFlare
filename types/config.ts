@@ -96,6 +96,7 @@ export type IncidentRecord = {
   start: number[]
   end: number | null // null if it's still open
   error: string[]
+  downNotified?: boolean // latch: DOWN webhook already sent for this incident
 }
 
 export type LatencyRecord = {
@@ -133,6 +134,7 @@ export type MonitorStateCompacted = {
       start: number[][]
       end: (number | null)[]
       error: string[][]
+      notified?: boolean[]
     }
   >
 
